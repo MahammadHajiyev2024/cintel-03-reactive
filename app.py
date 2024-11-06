@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 from shiny import render 
 from shinyswatch import theme
+from shiny import reactive
 
 
 # loading the dataset
@@ -13,7 +14,6 @@ penguins_df = load_penguins()
 
 # Giving the Title
 ui.page_opts(title = "Mo and Penguins", fillable = True, theme = theme.superhero)
-
 
 with ui.sidebar(open="open"):
     ui.h2("Sidebar")
@@ -69,7 +69,7 @@ with ui.layout_columns():
 
             fig, ax = plt.subplots(figsize=(10, 6))
             sns.histplot(
-                data=penguins_df,
+                data=filtered_data(),
                 x=selected_attribute,
                 hue="species",
                 bins=bin_count,
@@ -90,7 +90,6 @@ with ui.layout_columns():
         def plotly_scatterplot():
             selected_species = input.selected_species_list()
             filtered_df = penguins_df[penguins_df["species"].isin(selected_species)]
-
             fig = px.scatter(
                 filtered_df,
                 x="flipper_length_mm",
@@ -125,4 +124,3 @@ with ui.layout_columns():
 @reactive.calc
 def filtered_data():
     return penguins_df
-

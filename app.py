@@ -45,7 +45,7 @@ with ui.layout_columns():
 
         @render.data_frame
         def penguins_table():
-            return penguins_df
+            return render.DataTable(filtered_data())
             
     #Data Grid
     with ui.card():
@@ -53,8 +53,8 @@ with ui.layout_columns():
 
         @render.data_frame
         def penguins_grid():
-            return penguins_df
-            
+            return render.DataGrid(filtered_data())
+                  
 
 with ui.layout_columns():
     # Seaborn Histogram
@@ -123,4 +123,9 @@ with ui.layout_columns():
 
 @reactive.calc
 def filtered_data():
+    selected_species = input.selected_species_list()
+    if selected_species:
+        return penguins_df[penguins_df['species'].isin(selected_species)]
+    else: 
+        return penguins_df
     return penguins_df
